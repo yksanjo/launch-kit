@@ -1,5 +1,9 @@
 # mirror-marketplace — Honest Audit Report (2026-05-16)
 
+> **📌 Status update — 2026-05-17:** The headline finding below ("no SOL payment processing in this codebase") was **fixed in [commit `2b788fa`](https://github.com/yksanjo/mirror-marketplace/commit/2b788fa)**. `/api/subscribe` now requires a `paymentSignature`, fetches the parsed tx via `@solana/web3.js`, verifies a `SystemProgram.transfer` to both the creator wallet and the platform fee wallet at the tier's listed price, enforces a 10-minute freshness window, and prevents replay via `data/used_signatures.json`. `/api/listings` POST now requires an ed25519 signed wallet-ownership proof. Backend is now correct end-to-end; the open follow-up is wiring `@solana/wallet-adapter` on the frontend so the in-app Subscribe button builds + signs the dual-transfer tx automatically (tracked in the repo's README Roadmap). The audit below is kept as the historical record of the gap and the fix's rationale.
+
+---
+
 User asked 5 questions on a live product taking customers. Reporting straight, no padding.
 
 **Source of report:** code review of `~/mirror-marketplace` (local) + **live SSH check of deployed Pi** (`yojinbot@100.109.137.47` via Tailscale, 2026-05-16 05:24 UTC).
