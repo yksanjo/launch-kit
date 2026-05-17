@@ -42,7 +42,7 @@ Each week the assistant should automatically refresh these if no answer given:
 | Mint/freeze authority | RugCheck `mintAuthority`, `freezeAuthority` | same |
 | pump.fun reply count | `frontend-api-v3.pump.fun/coins/<CA>` | WebFetch |
 | GitHub commits (mirror-deployer, soag-vault, holder-hunt) | `gh api repos/yksanjo/<repo>/commits` | gh CLI |
-| Pi service status | `ssh yojinbot@100.109.137.47 'systemctl is-active …'` | SSH |
+| Pi service status | `ssh yojinbot@<pi-host> 'systemctl is-active …'` | SSH |
 | Pi free RAM / load | same SSH | SSH |
 
 So the minimum input for next week's recap is just:

@@ -6,7 +6,7 @@
 
 User asked 5 questions on a live product taking customers. Reporting straight, no padding.
 
-**Source of report:** code review of `~/mirror-marketplace` (local) + **live SSH check of deployed Pi** (`yojinbot@100.109.137.47` via Tailscale, 2026-05-16 05:24 UTC).
+**Source of report:** code review of `~/mirror-marketplace` (local) + **live SSH check of deployed Pi** (`yojinbot@<pi-host>` via Tailscale, 2026-05-16 05:24 UTC).
 
 ---
 
@@ -220,7 +220,7 @@ Two patterns, pick one:
 - Whether the deployed code is actually identical to the local repo, or if you have unmerged changes on the Pi
 - The public URL of mirror-marketplace under musicailab.com
 
-**Want me to SSH to `yojinbot@100.109.137.47` (Tailscale, per `pi-fleet.md`) and check live state?** I can:
+**Want me to SSH to `yojinbot@<pi-host>` (Tailscale, per `pi-fleet.md`) and check live state?** I can:
 - Read `data/listings.json` + `data/subscriptions.json` to see real activity
 - `systemctl status mirror-marketplace` to confirm it's running
 - `journalctl -u mirror-marketplace -n 200` for recent activity
