@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>{{TITLE}}</title>
+<style>
+  @page { size: A4; margin: 14mm 12mm 14mm 12mm; }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    color: #0a0a0a; background: #fff;
+    font-size: 10.5pt; line-height: 1.45;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  a { color: #0a0a0a; text-decoration: underline; text-decoration-thickness: 0.5px; text-underline-offset: 2px; }
+  a:hover { color: #4a25c1; }
+  .mono { font-family: "SF Mono", "JetBrains Mono", "Menlo", "Courier New", monospace; }
+
+  .hero {
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: end; gap: 16px;
+    padding: 6px 0 14px 0;
+    border-bottom: 2px solid #0a0a0a;
+    margin-bottom: 18px;
+  }
+  .hero h1 { margin: 0; font-size: 34pt; font-weight: 900; letter-spacing: -1.2px; line-height: 0.95; }
+  .hero .sub { margin: 6px 0 0 0; font-size: 11pt; color: #555; letter-spacing: 0.2px; }
+  .hero .right { text-align: right; font-size: 8.5pt; color: #555; line-height: 1.4; }
+  .hero .right b { color: #0a0a0a; font-weight: 700; display: block; }
+
+  section { margin: 0 0 16px 0; page-break-inside: avoid; }
+  h2 {
+    font-size: 9pt; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
+    margin: 0 0 10px 0; color: #888;
+    display: flex; align-items: center; gap: 10px;
+  }
+  h2::after { content: ""; flex: 1; height: 1px; background: #ddd; }
+  h3 { margin: 0 0 6px 0; font-size: 12pt; font-weight: 700; letter-spacing: -0.2px; }
+  p { margin: 0 0 8px 0; }
+  small { color: #666; font-size: 8.5pt; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .stat {
+    border: 1px solid #e5e5e5; border-radius: 8px; padding: 10px 12px;
+    background: #fafafa;
+  }
+  .stat .k { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 4px; }
+  .stat .v { font-size: 18pt; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
+  .stat .x { font-size: 8.5pt; color: #555; margin-top: 4px; }
+  .stat.green .v { color: #1f7a3a; }
+  .stat.amber .v { color: #b46a00; }
+  .stat.violet .v { color: #4a25c1; }
+  .stat.red .v { color: #b3261e; }
+
+  .flow {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px;
+    margin: 6px 0 4px 0;
+  }
+  .step {
+    border: 1.5px solid #0a0a0a; border-radius: 10px;
+    padding: 10px 8px; text-align: center; background: #fff;
+    position: relative;
+  }
+  .step .num {
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    background: #0a0a0a; color: #fff; border-radius: 999px;
+    width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+    font-size: 9pt; font-weight: 800;
+  }
+  .step .icon { font-size: 22pt; line-height: 1; margin: 4px 0 6px 0; }
+  .step .label { font-size: 9.5pt; font-weight: 700; }
+  .step .desc { font-size: 7.5pt; color: #555; margin-top: 3px; line-height: 1.3; }
+  .step.violet { border-color: #4a25c1; background: #f6f3ff; }
+  .step.violet .num { background: #4a25c1; }
+  .step.amber { border-color: #b46a00; background: #fff8ee; }
+  .step.amber .num { background: #b46a00; }
+  .step.green { border-color: #1f7a3a; background: #effaf2; }
+  .step.green .num { background: #1f7a3a; }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .card {
+    border: 1px solid #e5e5e5; border-radius: 10px; padding: 12px 14px;
+    background: #fff;
+  }
+  .card.dark { background: #0a0a0a; color: #fff; border-color: #0a0a0a; }
+  .card.dark a { color: #fff; }
+  .card.dark .k { color: #aaa; }
+  ul.bare { list-style: none; padding: 0; margin: 0; }
+  ul.bare li { padding: 4px 0; border-bottom: 1px dashed #eee; font-size: 9.5pt; }
+  ul.bare li:last-child { border-bottom: none; }
+  ul.bare li .lab { color: #666; display: inline-block; min-width: 80px; }
+
+  .family { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .fam {
+    border: 1px solid #e5e5e5; border-radius: 10px; padding: 11px 12px;
+    background: #fff;
+  }
+  .fam .badge {
+    display: inline-block; font-size: 7.5pt; letter-spacing: 0.8px;
+    text-transform: uppercase; padding: 2px 7px; border-radius: 999px;
+    background: #f0f0f0; color: #555; font-weight: 700; margin-bottom: 6px;
+  }
+  .fam.live .badge { background: #d6f1de; color: #1f7a3a; }
+  .fam.queued .badge { background: #fce5d4; color: #b46a00; }
+  .fam.cold .badge { background: #ececec; color: #666; }
+  .fam h4 { margin: 0 0 4px 0; font-size: 11pt; font-weight: 800; }
+  .fam p { font-size: 8.5pt; color: #444; margin: 0 0 6px 0; line-height: 1.4; }
+  .fam .lnk { font-size: 8pt; color: #4a25c1; word-break: break-all; }
+
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tier {
+    border: 1px solid #e5e5e5; border-radius: 10px; padding: 10px;
+    text-align: center;
+  }
+  .tier .medal { font-size: 24pt; line-height: 1; }
+  .tier .name { font-size: 10pt; font-weight: 800; margin: 4px 0 2px 0; }
+  .tier .mul { font-size: 16pt; font-weight: 900; letter-spacing: -1px; }
+  .tier .desc { font-size: 8pt; color: #666; margin-top: 4px; }
+  .tier.bronze { background: #fdf4e8; border-color: #d9a86a; }
+  .tier.silver { background: #f3f4f6; border-color: #b0b6bd; }
+  .tier.gold   { background: #fff7d6; border-color: #d4af37; }
+
+  .timeline { border-left: 2px solid #0a0a0a; padding-left: 14px; }
+  .tl-item { margin-bottom: 10px; position: relative; }
+  .tl-item::before {
+    content: ""; position: absolute; left: -19px; top: 4px;
+    width: 8px; height: 8px; border-radius: 50%; background: #0a0a0a;
+  }
+  .tl-item .date {
+    font-size: 8pt; letter-spacing: 1px; text-transform: uppercase; color: #888;
+    font-weight: 700; margin-bottom: 2px;
+  }
+  .tl-item .title { font-size: 10pt; font-weight: 700; }
+  .tl-item .note { font-size: 8.5pt; color: #555; margin-top: 2px; }
+  .tl-item .note a { color: #4a25c1; word-break: break-all; }
+
+  .nextlist { list-style: none; padding: 0; margin: 0; }
+  .nextlist li {
+    padding: 8px 10px; margin-bottom: 6px;
+    border: 1px solid #e5e5e5; border-left: 4px solid #4a25c1;
+    border-radius: 4px;
+    font-size: 9pt;
+  }
+  .nextlist li b { display: block; margin-bottom: 2px; font-size: 10pt; }
+  .nextlist li.high { border-left-color: #b3261e; }
+  .nextlist li.med  { border-left-color: #b46a00; }
+
+  .foot {
+    margin-top: 18px; padding-top: 12px; border-top: 1px solid #ddd;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    font-size: 8.5pt; color: #666;
+  }
+  .foot a { color: #4a25c1; }
+  .ca { font-size: 7.5pt; word-break: break-all; }
+
+  @media print { .page-break { page-break-before: always; } }
+</style>
+</head>
+<body>
+
+  <div class="hero">
+    <div>
+      <h1>{{TITLE}}</h1>
+      <p class="sub">{{SUBTITLE}}</p>
+    </div>
+    <div class="right">
+      <b>{{DATE_RANGE}}</b>
+      Built by <a href="https://x.com/yksanjo">@yksanjo</a> · Tokyo<br/>
+      <a href="https://www.musicailab.com">musicailab.com</a>
+    </div>
+  </div>
+
+  <section>
+    <h2>The Numbers</h2>
+    <div class="stats">{{STATS_HTML}}</div>
+  </section>
+
+  <section>
+    <h2>How It Works · End-to-end Flow</h2>
+    <div class="flow">{{FLOW_HTML}}</div>
+    <p style="font-size:8.5pt;color:#555;margin-top:10px;">{{FLOW_NOTE}}</p>
+  </section>
+
+  <section>
+    <h2>Token · $SOAG</h2>
+    <div class="cols">
+      <div class="card">
+        <h3>Solana Agent</h3>
+        <ul class="bare">{{TOKEN_FACTS_HTML}}</ul>
+      </div>
+      <div class="card dark">
+        <h3 style="color:#fff">Verify Everything</h3>
+        <ul class="bare" style="font-size:9pt">{{VERIFY_LINKS_HTML}}</ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Mirror Family · Tooling Layer</h2>
+    <div class="family">{{FAMILY_HTML}}</div>
+  </section>
+
+  <section>
+    <h2>Vault · Barutan-claw Badges</h2>
+    <div class="tiers">{{TIERS_HTML}}</div>
+    <p style="font-size:8.5pt;color:#555;margin-top:10px;">{{TIERS_NOTE}}</p>
+  </section>
+
+  <section>
+    <h2>This Week · Shipped</h2>
+    <div class="timeline">{{TIMELINE_HTML}}</div>
+  </section>
+
+  <section>
+    <h2>Next Week · Priorities</h2>
+    <ul class="nextlist">{{NEXT_HTML}}</ul>
+  </section>
+
+  <section>
+    <h2>Community · Telegram</h2>
+    <div class="cols">
+      <div class="card">
+        <h3>$SOAG Community</h3>
+        <p style="font-size:9pt">{{TG_DESC}}</p>
+        <p style="margin:6px 0"><a href="{{TG_URL}}" class="mono" style="font-size:9pt">{{TG_URL_DISPLAY}}</a></p>
+        <p style="font-size:8.5pt;color:#666;margin:0">{{TG_META}}</p>
+      </div>
+      <div class="card">
+        <h3>Daily Loop</h3>
+        <ol style="margin:0;padding-left:18px;font-size:9pt;line-height:1.6">{{DAILY_LOOP_HTML}}</ol>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">
+    <div>
+      <b style="color:#0a0a0a">Verify on-chain · Don't trust, verify.</b><br/>
+      {{FOOTER_NOTE}}
+    </div>
+    <div style="text-align:right">
+      Tokyo · {{GEN_DATE}} · Built by <a href="https://x.com/yksanjo">@yksanjo</a><br/>
+      Code: <a href="https://github.com/yksanjo">github.com/yksanjo</a> · Site: <a href="https://www.musicailab.com">musicailab.com</a>
+    </div>
+  </div>
+
+</body>
+</html>

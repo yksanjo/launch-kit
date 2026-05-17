@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>$SOAG — What We Did This Week</title>
+<style>
+  @page { size: A4; margin: 14mm 12mm 14mm 12mm; }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    color: #0a0a0a; background: #fff;
+    font-size: 10.5pt; line-height: 1.45;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  a { color: #0a0a0a; text-decoration: underline; text-decoration-thickness: 0.5px; text-underline-offset: 2px; }
+  a:hover { color: #4a25c1; }
+  .mono { font-family: "SF Mono", "JetBrains Mono", "Menlo", "Courier New", monospace; }
+
+  /* Page wrapper */
+  .page { padding: 0; max-width: 100%; }
+
+  /* Header band */
+  .hero {
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: end; gap: 16px;
+    padding: 6px 0 14px 0;
+    border-bottom: 2px solid #0a0a0a;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    margin: 0; font-size: 34pt; font-weight: 900; letter-spacing: -1.2px; line-height: 0.95;
+  }
+  .hero .sub {
+    margin: 6px 0 0 0; font-size: 11pt; color: #555; letter-spacing: 0.2px;
+  }
+  .hero .right { text-align: right; font-size: 8.5pt; color: #555; line-height: 1.4; }
+  .hero .right b { color: #0a0a0a; font-weight: 700; display: block; }
+
+  /* Section base */
+  section { margin: 0 0 16px 0; page-break-inside: avoid; }
+  h2 {
+    font-size: 9pt; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
+    margin: 0 0 10px 0; color: #888;
+    display: flex; align-items: center; gap: 10px;
+  }
+  h2::after { content: ""; flex: 1; height: 1px; background: #ddd; }
+  h3 { margin: 0 0 6px 0; font-size: 12pt; font-weight: 700; letter-spacing: -0.2px; }
+  p { margin: 0 0 8px 0; }
+  small { color: #666; font-size: 8.5pt; }
+
+  /* Stats row */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .stat {
+    border: 1px solid #e5e5e5; border-radius: 8px; padding: 10px 12px;
+    background: #fafafa;
+  }
+  .stat .k { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 4px; }
+  .stat .v { font-size: 18pt; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
+  .stat .x { font-size: 8.5pt; color: #555; margin-top: 4px; }
+  .stat.green .v { color: #1f7a3a; }
+  .stat.amber .v { color: #b46a00; }
+  .stat.violet .v { color: #4a25c1; }
+
+  /* Flow diagram */
+  .flow {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px;
+    margin: 6px 0 4px 0;
+  }
+  .step {
+    border: 1.5px solid #0a0a0a; border-radius: 10px;
+    padding: 10px 8px; text-align: center; background: #fff;
+    position: relative;
+  }
+  .step .num {
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    background: #0a0a0a; color: #fff; border-radius: 999px;
+    width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+    font-size: 9pt; font-weight: 800;
+  }
+  .step .icon { font-size: 22pt; line-height: 1; margin: 4px 0 6px 0; }
+  .step .label { font-size: 9.5pt; font-weight: 700; }
+  .step .desc { font-size: 7.5pt; color: #555; margin-top: 3px; line-height: 1.3; }
+  .step.violet { border-color: #4a25c1; background: #f6f3ff; }
+  .step.violet .num { background: #4a25c1; }
+  .step.amber { border-color: #b46a00; background: #fff8ee; }
+  .step.amber .num { background: #b46a00; }
+  .step.green { border-color: #1f7a3a; background: #effaf2; }
+  .step.green .num { background: #1f7a3a; }
+
+  /* Two col layout */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .card {
+    border: 1px solid #e5e5e5; border-radius: 10px; padding: 12px 14px;
+    background: #fff;
+  }
+  .card.dark { background: #0a0a0a; color: #fff; border-color: #0a0a0a; }
+  .card.dark a { color: #fff; }
+  .card.dark .k { color: #aaa; }
+  ul.bare { list-style: none; padding: 0; margin: 0; }
+  ul.bare li { padding: 4px 0; border-bottom: 1px dashed #eee; font-size: 9.5pt; }
+  ul.bare li:last-child { border-bottom: none; }
+  ul.bare li .lab { color: #666; display: inline-block; min-width: 80px; }
+
+  /* Mirror family grid */
+  .family { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .fam {
+    border: 1px solid #e5e5e5; border-radius: 10px; padding: 11px 12px;
+    background: #fff;
+  }
+  .fam .badge {
+    display: inline-block; font-size: 7.5pt; letter-spacing: 0.8px;
+    text-transform: uppercase; padding: 2px 7px; border-radius: 999px;
+    background: #f0f0f0; color: #555; font-weight: 700; margin-bottom: 6px;
+  }
+  .fam.live .badge { background: #d6f1de; color: #1f7a3a; }
+  .fam.queued .badge { background: #fce5d4; color: #b46a00; }
+  .fam h4 { margin: 0 0 4px 0; font-size: 11pt; font-weight: 800; }
+  .fam p { font-size: 8.5pt; color: #444; margin: 0 0 6px 0; line-height: 1.4; }
+  .fam .lnk { font-size: 8pt; color: #4a25c1; word-break: break-all; }
+
+  /* Badge tier table */
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tier {
+    border: 1px solid #e5e5e5; border-radius: 10px; padding: 10px;
+    text-align: center;
+  }
+  .tier .medal { font-size: 24pt; line-height: 1; }
+  .tier .name { font-size: 10pt; font-weight: 800; margin: 4px 0 2px 0; }
+  .tier .mul { font-size: 16pt; font-weight: 900; letter-spacing: -1px; }
+  .tier .desc { font-size: 8pt; color: #666; margin-top: 4px; }
+  .tier.bronze { background: #fdf4e8; border-color: #d9a86a; }
+  .tier.silver { background: #f3f4f6; border-color: #b0b6bd; }
+  .tier.gold   { background: #fff7d6; border-color: #d4af37; }
+
+  /* Footer */
+  .foot {
+    margin-top: 18px; padding-top: 12px; border-top: 1px solid #ddd;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    font-size: 8.5pt; color: #666;
+  }
+  .foot a { color: #4a25c1; }
+  .ca { font-size: 7.5pt; word-break: break-all; }
+
+  /* Print-specific */
+  @media print {
+    .page-break { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HERO ============================================= -->
+  <div class="hero">
+    <div>
+      <h1>$SOAG <span style="color:#4a25c1">·</span> Week 1</h1>
+      <p class="sub">Solana Agent — three agents, one token. What shipped this week.</p>
+    </div>
+    <div class="right">
+      <b>Week of 2026-05-10 → 05-16</b>
+      Built by <a href="https://x.com/yksanjo">@yksanjo</a> · Tokyo<br/>
+      <a href="https://www.musicailab.com">musicailab.com</a>
+    </div>
+  </div>
+
+  <!-- HEADLINE STATS ==================================== -->
+  <section>
+    <h2>The Numbers</h2>
+    <div class="stats">
+      <div class="stat green">
+        <div class="k">LP Locked</div>
+        <div class="v">100%</div>
+        <div class="x">at pump.fun graduation · permanent</div>
+      </div>
+      <div class="stat green">
+        <div class="k">Authorities</div>
+        <div class="v">Revoked</div>
+        <div class="x">mint &amp; freeze · both null</div>
+      </div>
+      <div class="stat amber">
+        <div class="k">RugCheck</div>
+        <div class="v">20<small style="font-size:11pt">/100</small></div>
+        <div class="x">lower = safer · green tier</div>
+      </div>
+      <div class="stat violet">
+        <div class="k">Holders</div>
+        <div class="v">202</div>
+        <div class="x">7-day target: 250+</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS ====================================== -->
+  <section>
+    <h2>How It Works · End-to-end Flow</h2>
+    <div class="flow">
+      <div class="step violet">
+        <div class="num">1</div>
+        <div class="icon">🚀</div>
+        <div class="label">Launch</div>
+        <div class="desc">pump.fun bonding curve → graduated to PumpSwap</div>
+      </div>
+      <div class="step violet">
+        <div class="num">2</div>
+        <div class="icon">🪞</div>
+        <div class="label">Mirror Family</div>
+        <div class="desc">deployer rep + wallet thesis tooling</div>
+      </div>
+      <div class="step green">
+        <div class="num">3</div>
+        <div class="icon">🔒</div>
+        <div class="label">Vault Lock</div>
+        <div class="desc">Streamflow lockup of $SOAG</div>
+      </div>
+      <div class="step amber">
+        <div class="num">4</div>
+        <div class="icon">🦞</div>
+        <div class="label">Barutan NFT</div>
+        <div class="desc">soulbound claw badge · Bronze/Silver/Gold</div>
+      </div>
+      <div class="step amber">
+        <div class="num">5</div>
+        <div class="icon">💬</div>
+        <div class="label">Telegram</div>
+        <div class="desc">community + Barutan agent + quiz bot</div>
+      </div>
+      <div class="step green">
+        <div class="num">6</div>
+        <div class="icon">🎯</div>
+        <div class="label">Quiz Reward</div>
+        <div class="desc">daily wallet puzzle → $SOAG payouts ×badge</div>
+      </div>
+    </div>
+    <p style="font-size:8.5pt;color:#555;margin-top:10px;">
+      The loop: hold $SOAG → lock in <a href="https://github.com/yksanjo/soag-vault">SOAG Vault</a> →
+      mint a Barutan badge → multiply your <a href="https://github.com/yksanjo/holder-hunt">Holder Hunt</a>
+      payouts → more $SOAG → lock more. Each piece is on-chain verifiable; every payout has a tx hash.
+    </p>
+  </section>
+
+  <!-- TOKEN MECHANICS ==================================== -->
+  <section>
+    <h2>Token · $SOAG</h2>
+    <div class="cols">
+      <div class="card">
+        <h3>Solana Agent</h3>
+        <ul class="bare">
+          <li><span class="lab">CA</span><span class="mono" style="font-size:8pt;word-break:break-all">ADue87cPcDhsyGq2hrDsukp7j8AFTSnaYHSanDATpump</span></li>
+          <li><span class="lab">Pair</span><span class="mono" style="font-size:8pt">PumpSwap · 8mqQqir…E8uL</span></li>
+          <li><span class="lab">LP Mint</span><span class="mono" style="font-size:8pt">AYmfmrW7…58vb</span></li>
+          <li><span class="lab">Supply</span>1,000,000,000 $SOAG</li>
+          <li><span class="lab">Decimals</span>6</li>
+          <li><span class="lab">Mint auth</span>Revoked (null)</li>
+          <li><span class="lab">Freeze auth</span>Revoked (null)</li>
+        </ul>
+      </div>
+      <div class="card dark">
+        <h3 style="color:#fff">Verify Everything</h3>
+        <ul class="bare" style="font-size:9pt">
+          <li style="border-color:#333"><span class="lab" style="color:#aaa">Chart</span>
+            <a href="https://dexscreener.com/solana/ADue87cPcDhsyGq2hrDsukp7j8AFTSnaYHSanDATpump">dexscreener.com</a></li>
+          <li style="border-color:#333"><span class="lab" style="color:#aaa">Birdeye</span>
+            <a href="https://birdeye.so/token/ADue87cPcDhsyGq2hrDsukp7j8AFTSnaYHSanDATpump?chain=solana">birdeye.so</a></li>
+          <li style="border-color:#333"><span class="lab" style="color:#aaa">RugCheck</span>
+            <a href="https://rugcheck.xyz/tokens/ADue87cPcDhsyGq2hrDsukp7j8AFTSnaYHSanDATpump">rugcheck.xyz</a></li>
+          <li style="border-color:#333"><span class="lab" style="color:#aaa">Solscan</span>
+            <a href="https://solscan.io/token/ADue87cPcDhsyGq2hrDsukp7j8AFTSnaYHSanDATpump">solscan.io</a></li>
+          <li style="border-color:#333"><span class="lab" style="color:#aaa">Pump.fun</span>
+            <a href="https://pump.fun/coin/ADue87cPcDhsyGq2hrDsukp7j8AFTSnaYHSanDATpump">pump.fun</a></li>
+          <li style="border-color:#333"><span class="lab" style="color:#aaa">Jupiter</span>
+            <a href="https://jup.ag/swap/SOL-ADue87cPcDhsyGq2hrDsukp7j8AFTSnaYHSanDATpump">jup.ag</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- MIRROR FAMILY ====================================== -->
+  <section>
+    <h2>Mirror Family · Tooling Layer</h2>
+    <div class="family">
+      <div class="fam live">
+        <span class="badge">Live</span>
+        <h4>🪞 Mirror Deployer</h4>
+        <p>Paste any pump.fun deployer wallet. Get reputation score, archetype, AI thesis, rug pattern. The pre-buy diligence you used to do manually on Solscan.</p>
+        <div class="lnk"><a href="https://github.com/yksanjo/mirror-deployer">github.com/yksanjo/mirror-deployer</a></div>
+      </div>
+      <div class="fam live">
+        <span class="badge">Live</span>
+        <h4>🎯 Holder Hunt</h4>
+        <p>Daily wallet-analysis quiz in $SOAG TG. Drops a target wallet at 00:00 + 12:00 UTC. Solve with Mirror Agent. Top scorers split a $SOAG pot.</p>
+        <div class="lnk"><a href="https://github.com/yksanjo/holder-hunt">github.com/yksanjo/holder-hunt</a></div>
+      </div>
+      <div class="fam live">
+        <span class="badge">Live</span>
+        <h4>🔒 SOAG Vault</h4>
+        <p>Streamflow lockup of $SOAG → mint soulbound Barutan-claw NFT badge. Badge multiplies your Holder Hunt payouts. No second token, no inflation.</p>
+        <div class="lnk"><a href="https://github.com/yksanjo/soag-vault">github.com/yksanjo/soag-vault</a></div>
+      </div>
+      <div class="fam live">
+        <span class="badge">Live</span>
+        <h4>🦞 Barutan Agent</h4>
+        <p>Group mascot agent in TG. Runs locally on a Raspberry Pi Zero 2W via Groq API. Ask it things. Same character as the Vault NFT badges.</p>
+        <div class="lnk">Live in <a href="https://t.me/+ywGUPczH4GllYTBh">t.me/+ywGUPczH4GllYTBh</a></div>
+      </div>
+      <div class="fam live">
+        <span class="badge">Live</span>
+        <h4>🔍 Pumpscan</h4>
+        <p>Solana wallet/token analyzer. Bundler detection, holder concentration, dev wallet status. Powers the Holder Hunt quiz workflow.</p>
+        <div class="lnk"><a href="https://pumpscan.musicailab.com">pumpscan.musicailab.com</a></div>
+      </div>
+      <div class="fam queued">
+        <span class="badge">Beta · Waitlist</span>
+        <h4>🏪 Mirror Marketplace</h4>
+        <p>Subscribe to top traders' AI-generated theses. Beta — payment flow under construction. Discovery surface live; SOL subscriptions coming.</p>
+        <div class="lnk"><a href="https://github.com/yksanjo/mirror-marketplace">github.com/yksanjo/mirror-marketplace</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VAULT BADGES ======================================= -->
+  <section>
+    <h2>Vault · Barutan-claw Badges</h2>
+    <div class="tiers">
+      <div class="tier bronze">
+        <div class="medal">🥉</div>
+        <div class="name">Bronze</div>
+        <div class="mul">1.2×</div>
+        <div class="desc">Entry tier · short lock</div>
+      </div>
+      <div class="tier silver">
+        <div class="medal">🥈</div>
+        <div class="name">Silver</div>
+        <div class="mul">1.5×</div>
+        <div class="desc">Mid tier · med lock</div>
+      </div>
+      <div class="tier gold">
+        <div class="medal">🥇</div>
+        <div class="name">Gold</div>
+        <div class="mul">2.0×</div>
+        <div class="desc">Top tier · long lock</div>
+      </div>
+    </div>
+    <p style="font-size:8.5pt;color:#555;margin-top:10px;">
+      Badges are <b>soulbound</b> (non-transferable). The lock is via <a href="https://streamflow.finance">Streamflow</a>;
+      the badge is a cNFT minted on lock confirmation. Multiplier applies to every Holder Hunt payout while the badge is held.
+      Same Barutan character as the <a href="https://t.me/+ywGUPczH4GllYTBh">Telegram mascot agent</a> — one IP, two surfaces.
+    </p>
+  </section>
+
+  <!-- COMMUNITY ========================================= -->
+  <section>
+    <h2>Community · Telegram</h2>
+    <div class="cols">
+      <div class="card">
+        <h3>$SOAG Community</h3>
+        <p style="font-size:9pt">Quiz, chat, Barutan agent, Holder Hunt puzzles, payouts. The single place everything happens.</p>
+        <p style="margin:6px 0"><a href="https://t.me/+ywGUPczH4GllYTBh" class="mono" style="font-size:9pt">t.me/+ywGUPczH4GllYTBh</a></p>
+        <p style="font-size:8.5pt;color:#666;margin:0">
+          15 members · daily puzzle drops at <b>00:00 UTC</b> &amp; <b>12:00 UTC</b>
+        </p>
+      </div>
+      <div class="card">
+        <h3>Daily Loop</h3>
+        <ol style="margin:0;padding-left:18px;font-size:9pt;line-height:1.6">
+          <li>Bot drops a target wallet in TG</li>
+          <li>Players scope it via <a href="https://pumpscan.musicailab.com">pumpscan</a> + Mirror Agent</li>
+          <li>Submit answer in chat</li>
+          <li>Top scorers earn $SOAG</li>
+          <li>Holders with Vault badge earn <b>×1.2 / ×1.5 / ×2.0</b></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER ============================================ -->
+  <div class="foot">
+    <div>
+      <b style="color:#0a0a0a">Verify on-chain · Don't trust, verify.</b><br/>
+      Every link in this document is verifiable. LP lock is at <a href="https://solscan.io/account/AYmfmrW7uXNdr8UkTHod9R9QiRR2wGhf2bJYKDjZ58vb">solscan.io/account/AYmfmrW7…58vb</a>.
+      Authorities are null on the mint page.
+    </div>
+    <div style="text-align:right">
+      Tokyo · 2026-05-16 · Built by <a href="https://x.com/yksanjo">@yksanjo</a><br/>
+      Code: <a href="https://github.com/yksanjo">github.com/yksanjo</a> · Site: <a href="https://www.musicailab.com">musicailab.com</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
