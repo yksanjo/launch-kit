@@ -5,12 +5,13 @@ Run with the matplotlib-bundled Python:
   /opt/homebrew/opt/python-matplotlib/libexec/bin/python3 soag_distribution.py
 """
 import json
+import os
 import urllib.request
 from pathlib import Path
 import matplotlib.pyplot as plt
 
 CA = "ADue87cPcDhsyGq2hrDsukp7j8AFTSnaYHSanDATpump"
-HELIUS_KEY = "5bb69ab9-3e25-4b80-a043-f1c482490b06"
+HELIUS_KEY = os.environ.get("HELIUS_KEY", "")
 OUT_DIR = Path(__file__).parent
 
 # --- Pull live data ---
